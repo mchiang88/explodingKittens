@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-const createDeck = require('../assets/deck.js');
+import axios from 'axios';
 
 export default class Board extends Component {
   constructor() {
@@ -10,21 +9,35 @@ export default class Board extends Component {
       discard: [],
       playerOne: [],
       playerTwo: [],
+      current: 'playerOne',
     };
     this.startGame = this.startGame.bind(this);
+    this.updateGame = this.updateGame.bind(this);
   }
 
   componentDidMount() {
-    this.startGame();
+    this.updateGame();
   }
 
   startGame() {
-    const deck = createDeck(2);
-    const playerOne = [];
-    const playerTwo = [];
-    playerOne.push(deck.pop(), deck.pop(), deck.pop(), deck.pop());
-    playerTwo.push(deck.pop(), deck.pop(), deck.pop(), deck.pop());
-    this.setState({ deck, playerOne, playerTwo });
+    console.log('starting game');
+    axios.get('newGame')
+      .then((response) => {
+        this.setState(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  updateGame() {
+    axios.get('/game')
+      .then((response) => {
+        this.setState(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
@@ -33,6 +46,7 @@ export default class Board extends Component {
     } = this.state;
     return (
       <div>
+        <button type="button" onClick={() => this.startGame()}>Start New Game</button>
         <div>
           <span>Deck:</span>
           <span>{deck}</span>

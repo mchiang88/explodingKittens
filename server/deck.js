@@ -1,19 +1,19 @@
 const createDeck = (playerCount) => {
   const deck = [];
+  const hands = [];
   const addCard = (card, count) => {
     for (let n = 0; n < count; n += 1) {
       deck.push(card);
     }
   };
 
-  addCard('explodingKitten', playerCount - 1);
-  addCard('defuse', 6);
-  addCard('attack', 4);
+  // addCard('defuse', 6);
+  // addCard('attack', 4);
   addCard('skip', 4);
-  addCard('favor', 4);
+  // addCard('favor', 4);
   addCard('shuffle', 4);
   addCard('seeTheFuture', 5);
-  addCard('nope', 5);
+  // addCard('nope', 5);
   addCard('tacoCat', 4);
   addCard('cattermelon', 4);
   addCard('hairyPotatoCat', 4);
@@ -22,7 +22,17 @@ const createDeck = (playerCount) => {
 
   deck.sort(() => Math.random() - 0.5);
 
-  return deck;
+  for (let n = 0; n < playerCount; n += 1) {
+    const hand = [];
+    hand.push(deck.pop(), deck.pop(), deck.pop(), deck.pop());
+    hands.push(hand);
+  }
+
+  addCard('explodingKitten', playerCount - 1);
+
+  deck.sort(() => Math.random() - 0.5);
+
+  return { deck, hands };
 };
 
 module.exports = createDeck;
