@@ -17,6 +17,8 @@ let gameState = {
   discard: [],
   playerOne: [],
   playerTwo: [],
+  currentPlayer: 'playerOne',
+  winner: undefined,
 };
 
 app.get('/game', (req, res) => {
@@ -30,7 +32,27 @@ app.get('/newGame', (req, res) => {
     discard: [],
     playerOne: hands[0],
     playerTwo: hands[1],
+    currentPlayer: 'playerOne',
+    winner: undefined,
   };
+  console.log(gameState);
+  res.status(200).send(gameState);
+});
+
+app.get('/drawCard', (req, res) => {
+  const next = gameState.deck.splice(0, 1);
+  if (gameState.currentPlayer === 'playerOne') {
+    gameState.playerOne.push(next);
+    gameState.currentPlayer = 'playerTwo';
+  } else {
+    gameState.playerTwo.push(next);
+    gameState.currentPlayer = 'playerOne';
+  }
+  if (next[0] === 'Exploding Kitten') {
+    console.log('found winnner');
+    gameState.winner = gameState.currentPlayer;
+  }
+
   res.status(200).send(gameState);
 });
 
