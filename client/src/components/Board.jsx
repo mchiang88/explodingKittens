@@ -70,7 +70,7 @@ export default class Board extends Component {
 
   drawCard(e) {
     e.preventDefault();
-    if (this.state.winner === undefined) {
+    if (this.state.winner === undefined && this.state.thisPlayer === this.state.currentPlayer) {
       axios.get('/drawCard')
         .then((response) => {
           this.setState(response.data);
