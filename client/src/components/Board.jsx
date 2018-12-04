@@ -10,7 +10,7 @@ export default class Board extends Component {
     super();
     this.state = {
       deck: [],
-      discard: [],
+      discard: [''],
       playerOne: [],
       playerTwo: [],
       currentPlayer: 'playerOne',
@@ -19,6 +19,7 @@ export default class Board extends Component {
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
     this.drawCard = this.drawCard.bind(this);
+    this.playCard = this.playCard.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +60,16 @@ export default class Board extends Component {
     }
   }
 
+  playCard(player, index) {
+    if (player === this.state.currentPlayer && this.state.winner === undefined) {
+      console.log(index);
+      axios.post('/play', { index })
+        .then((response) => {
+          this.setState(response.data);
+        });
+    }
+  }
+
   render() {
     const {
       deck, discard, playerOne, playerTwo, currentPlayer, winner,
@@ -74,15 +85,15 @@ export default class Board extends Component {
         </div>
         <div>
           <span>Discard (Last 5 Cards):</span>
-          <Hand cards={discard.slice(0, 5)} />
+          <Hand cards={discard.slice(0, 5)} player="discard" playCard={this.playCard} />
         </div>
         <div className={styles.playerOne}>
           <span>PlayerOne:</span>
-          <Hand cards={playerOne} />
+          <Hand cards={playerOne} player="playerOne" playCard={this.playCard} />
         </div>
         <div className={styles.playerTwo}>
           <span>PlayerTwo:</span>
-          <Hand cards={playerTwo} />
+          <Hand cards={playerTwo} player="playerTwo" playCard={this.playCard} />
         </div>
 
       </div>

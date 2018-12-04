@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 let gameState = {
   deck: [],
-  discard: [],
+  discard: [''],
   playerOne: [],
   playerTwo: [],
   currentPlayer: 'playerOne',
@@ -29,13 +29,12 @@ app.get('/newGame', (req, res) => {
   const { deck, hands } = createDeck(2);
   gameState = {
     deck,
-    discard: [],
+    discard: [''],
     playerOne: hands[0],
     playerTwo: hands[1],
     currentPlayer: 'playerOne',
     winner: undefined,
   };
-  console.log(gameState);
   res.status(200).send(gameState);
 });
 
@@ -57,6 +56,8 @@ app.get('/drawCard', (req, res) => {
 });
 
 app.post('/play', (req, res) => {
+  console.log(req.body);
+
   res.status(200).send(gameState);
 });
 
