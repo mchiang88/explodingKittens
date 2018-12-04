@@ -92,10 +92,10 @@ export default class Board extends Component {
               return (
                 <Hand cards={hand} player={i} playCard={this.playCard} key={Math.random()} />
               );
-            } 
-            return (
-              <Hand cards={hand.map(() => 'back')} player={i} playCard={this.playCard} key={Math.random()} />
-            );
+            }
+            // return (
+            //   <Hand cards={hand.map(() => 'back')} player={i} playCard={this.playCard} key={Math.random()} />
+            // );
           })}
         </div>
       </div>

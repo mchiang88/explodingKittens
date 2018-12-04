@@ -13,7 +13,6 @@ export default class Hand extends Component {
     const { cards, player, playCard } = this.props;
     return (
       <div>
-        <span>{`Player ${player} :`}</span>
         <div className={styles.Hand}>
           {cards.map((type, i) => (
             <Card type={type} index={i} player={player} playCard={playCard} key={Math.random()} />

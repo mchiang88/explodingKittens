@@ -2,3 +2,12 @@
   display: flex;
   flex-direction: right;
 }
+
+.Name {
+  width: 100px;
+  height: 140px;
+  border-style: solid;
+  border-width: thin;
+  text-align: center;
+  font-size: 25px;
+}
