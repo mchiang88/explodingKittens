@@ -18,6 +18,7 @@ export default class Board extends Component {
       thisPlayer: 0,
       running: false,
       history: [],
+      alive: [],
     };
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
@@ -76,7 +77,7 @@ export default class Board extends Component {
 
   render() {
     const {
-      deck, discard, hands, currentPlayer, winner, thisPlayer, running, history,
+      deck, discard, hands, currentPlayer, winner, thisPlayer, running, history, alive
     } = this.state;
     return (
       <div className={styles.Container}>
@@ -92,7 +93,7 @@ export default class Board extends Component {
         </div>
         <div className={styles.Stats}>
           <div>{`Cards Remaining: ${deck.length}`}</div>
-          <div>{`Kittens Remaining: ${hands.length - 1}`}</div>
+          <div>{`Kittens Remaining: ${alive.length - 1}`}</div>
           <div>Chance of Death:</div>
           <div>{`${((hands.length - 1) / deck.length * 100).toFixed(2)}%`}</div>
         </div>

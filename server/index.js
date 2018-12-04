@@ -32,15 +32,18 @@ const discard = (card) => {
 };
 
 const nextPlayer = () => {
-
-}
+  let index = game.alive.indexOf(game.currentPlayer);
+  index = (index + 1) % game.alive.length;
+  game.currentPlayer = game.alive[index];
+};
 
 app.get('/game', (req, res) => {
   res.status(200).send(game);
 });
 
 app.get('/newGame', (req, res) => {
-  const { deck, hands } = createDeck(2);
+  const { deck, hands } = createDeck(4);
+  const alive = Array(hands.length).fill(0).map((x, i) => i);
   game = {
     deck,
     discard: [],
@@ -49,7 +52,7 @@ app.get('/newGame', (req, res) => {
     winner: undefined,
     playing: true,
     history: [],
-
+    alive,
   };
   res.status(200).send(game);
 });
@@ -58,13 +61,15 @@ app.get('/drawCard', (req, res) => {
   const next = game.deck.splice(0, 1);
   game.history.unshift(`Player ${game.currentPlayer} drew a card`);
   game.hands[game.currentPlayer].push(next);
-  game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
-
   if (next[0] === 'explodingKitten') {
-    console.log('found winnner');
+    game.history.unshift(`Player ${game.currentPlayer} exploded`);
+    game.alive = game.alive.filter(x => x !== game.currentPlayer);
+  }
+  nextPlayer();
+  if (game.alive.length === 1) {
+    game.history.unshift(`Player ${game.currentPlayer} wins!`);
     game.winner = game.currentPlayer;
   }
-
   res.status(200).send(game);
 });
 
