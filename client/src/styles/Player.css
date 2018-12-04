@@ -4,6 +4,12 @@
   height: 100px;
 }
 
+.Current {
+  border: 3px solid green;
+  width: 200px;
+  height: 100px;
+}
+
 .Name {
   text-align: center;
   font-size: 30px;

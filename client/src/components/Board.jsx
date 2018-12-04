@@ -16,12 +16,13 @@ export default class Board extends Component {
       currentPlayer: 0,
       winner: undefined,
       thisPlayer: 0,
-      running: false,
+      playing: false,
       history: [],
       alive: [],
     };
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
+    this.endGame = this.endGame.bind(this);
     this.drawCard = this.drawCard.bind(this);
     this.playCard = this.playCard.bind(this);
   }
@@ -31,7 +32,6 @@ export default class Board extends Component {
   }
 
   startGame() {
-    console.log('starting game');
     axios.get('newGame')
       .then((response) => {
         this.setState(response.data);
@@ -46,6 +46,17 @@ export default class Board extends Component {
     axios.get('/game')
       .then((response) => {
         this.setState(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  endGame() {
+    axios.get('endGame')
+      .then((response) => {
+        this.setState(response.data);
+        this.setState({ winner: undefined });
       })
       .catch((error) => {
         console.error(error);
@@ -77,19 +88,19 @@ export default class Board extends Component {
 
   render() {
     const {
-      deck, discard, hands, currentPlayer, winner, thisPlayer, running, history, alive
+      deck, discard, hands, currentPlayer, winner, thisPlayer, playing, history, alive
     } = this.state;
+
     return (
       <div className={styles.Container}>
         <div className={styles.Header}>
           <button type="button" onClick={() => this.startGame()}>Start New Game</button>
-          <button type="button">End Game</button>
+          <button type="button" onClick={() => this.endGame()}>End Game</button>
           <h4>{`You are player ${thisPlayer}`}</h4>
-          <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
         </div>
         <div className={styles.Opponents}>
           {hands.map((hand, i) => (
-            <Player cards={hand} player={i} alive={alive} key={Math.random()} />
+            <Player cards={hand} player={i} current={currentPlayer} alive={alive} key={Math.random()} />
           ))}
         </div>
         <div className={styles.Stats}>
@@ -100,7 +111,7 @@ export default class Board extends Component {
         <div className={styles.Deck}>
           <img
             className={styles.Back}
-            src={'https://s3-us-west-1.amazonaws.com/explodingkitten/back.jpg'}
+            src="https://s3-us-west-1.amazonaws.com/explodingkitten/back.jpg"
             alt="Back"
             onClick={(e) => this.drawCard(e)}
           />
@@ -111,8 +122,8 @@ export default class Board extends Component {
         <div className={styles.History}>
           History:
           <ul>
-            {history.slice(0, 4).map(h => (
-              <li>{h}</li>
+            {history.slice(0, 8).map(h => (
+              <li key={Math.random()}>{h}</li>
             ))}
           </ul>
         </div>

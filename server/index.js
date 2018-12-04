@@ -57,6 +57,20 @@ app.get('/newGame', (req, res) => {
   res.status(200).send(game);
 });
 
+app.get('/endGame', (req, res) => {
+  game = {
+    deck: [],
+    discard: [],
+    hands: [],
+    currentPlayer: 0,
+    winner: undefined,
+    playing: false,
+    history: [],
+    alive: [],
+  };
+  res.status(200).send(game);
+});
+
 app.get('/drawCard', (req, res) => {
   const next = game.deck.splice(0, 1);
   game.history.unshift(`Player ${game.currentPlayer} drew a card`);
@@ -87,7 +101,7 @@ app.post('/play', (req, res) => {
       game.deck.sort(() => Math.random() - 0.5);
       break;
     default:
-      game.history.unshift(`Player ${game.currentPlayer} played a card with no function`);
+      game.history.unshift(`Player ${game.currentPlayer} played a broken card`);
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
   }
 
