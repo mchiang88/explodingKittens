@@ -75,27 +75,36 @@ export default class Board extends Component {
       deck, discard, hands, currentPlayer, winner,
     } = this.state;
     return (
-      <div>
-        <button type="button" onClick={() => this.startGame()}>Start New Game</button>
-        <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
-        <div>
-          <span>Deck:</span>
-          <Card type="back" />
+      <div className={styles.Container}>
+        <div className={styles.Header}>
+          <button type="button" onClick={() => this.startGame()}>Start New Game</button>
+        </div>
+        <div className={styles.Opponents}>
+          <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
+        </div>
+        <div className={styles.Stats}>
+          <div>{`Cards Remaining: ${deck.length}`}</div>
+          <div>{`Kittens Remaining: ${hands.length - 1}`}</div>
+          <div>Chance of Death:</div>
+          <div>{`${((hands.length - 1) / deck.length * 100).toFixed(2)}%`}</div>
           <button type="button" onClick={() => this.drawCard()}>Draw Card</button>
         </div>
-        <div>
-          <Hand cards={discard.slice(0, 5)} player="discard" playCard={this.playCard} />
+        <div className={styles.Deck}>
+            <Card type="back" />
         </div>
-        <div className={styles.playerHands}>
+        <div className={styles.Discard}>
+          <Hand cards={discard.slice(0, 1)} player="discard" playCard={this.playCard} />
+        </div>
+        <div className={styles.History}>
+          History
+        </div>
+        <div className={styles.Hand}>
           {hands.map((hand, i) => {
             if (this.state.thisPlayer === i) {
               return (
                 <Hand cards={hand} player={i} playCard={this.playCard} key={Math.random()} />
               );
             }
-            // return (
-            //   <Hand cards={hand.map(() => 'back')} player={i} playCard={this.playCard} key={Math.random()} />
-            // );
           })}
         </div>
       </div>
