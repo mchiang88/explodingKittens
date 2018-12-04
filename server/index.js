@@ -64,8 +64,12 @@ app.post('/play', (req, res) => {
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
       game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
       break;
-    default:
+    case 'Shuffle':
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
+      game.deck.sort(() => Math.random() - 0.5);
+      break;
+    default:
+      // discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
   }
 
   res.status(200).send(game);
