@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 let game = {
   deck: [],
-  discard: [''],
+  discard: [],
   hands: [],
   currentPlayer: 0,
   winner: undefined,
@@ -36,7 +36,7 @@ app.get('/newGame', (req, res) => {
   const { deck, hands } = createDeck(3);
   game = {
     deck,
-    discard: [''],
+    discard: [],
     hands,
     currentPlayer: 0,
     winner: undefined,
@@ -49,7 +49,7 @@ app.get('/drawCard', (req, res) => {
   game.hands[game.currentPlayer].push(next);
   game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
 
-  if (next[0] === 'Exploding Kitten') {
+  if (next[0] === 'explodingKitten') {
     console.log('found winnner');
     game.winner = game.currentPlayer;
   }
@@ -69,7 +69,7 @@ app.post('/play', (req, res) => {
       game.deck.sort(() => Math.random() - 0.5);
       break;
     default:
-      // discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
+      discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
   }
 
   res.status(200).send(game);

@@ -10,7 +10,7 @@ export default class Board extends Component {
     super();
     this.state = {
       deck: [],
-      discard: [''],
+      discard: [],
       hands: [],
       currentPlayer: 0,
       winner: undefined,
@@ -79,7 +79,7 @@ export default class Board extends Component {
         <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
         <div>
           <span>Deck:</span>
-          <Card type={`${deck.length} Cards Remaining`} />
+          <Card type="back" />
           <button type="button" onClick={() => this.drawCard()}>Draw Card</button>
         </div>
         <div>
