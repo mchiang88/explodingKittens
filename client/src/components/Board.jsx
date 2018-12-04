@@ -14,6 +14,7 @@ export default class Board extends Component {
       hands: [],
       currentPlayer: 0,
       winner: undefined,
+      thisPlayer: 0,
     };
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
@@ -86,9 +87,16 @@ export default class Board extends Component {
           <Hand cards={discard.slice(0, 5)} player="discard" playCard={this.playCard} />
         </div>
         <div className={styles.playerHands}>
-          {hands.map((hand, i) => (
-            <Hand cards={hand} player={i} playCard={this.playCard} key={Math.random()} />
-          ))}
+          {hands.map((hand, i) => {
+            if (this.state.thisPlayer === i) {
+              return (
+                <Hand cards={hand} player={i} playCard={this.playCard} key={Math.random()} />
+              );
+            } 
+            return (
+              <Hand cards={hand.map(() => 'back')} player={i} playCard={this.playCard} key={Math.random()} />
+            );
+          })}
         </div>
       </div>
     );
