@@ -7,10 +7,9 @@ const createDeck = (playerCount) => {
     }
   };
 
-  // addCard('Defuse', 6);
-  // addCard('Attack', 4);
+  addCard('Attack', 4);
   addCard('Skip', 4);
-  // addCard('Favor', 4);
+  addCard('Favor', 4);
   addCard('Shuffle', 4);
   addCard('See The Future', 5);
   // addCard('Nope', 5);
@@ -23,12 +22,14 @@ const createDeck = (playerCount) => {
   deck.sort(() => Math.random() - 0.5);
 
   for (let n = 0; n < playerCount; n += 1) {
-    const hand = [];
-    hand.push(deck.pop(), deck.pop(), deck.pop(), deck.pop());
+    const hand = ['Defuse'];
+    hand.push(deck.pop(), deck.pop(), deck.pop());
+    hand.sort(() => Math.random() - 0.5);
     hands.push(hand);
   }
 
   addCard('Exploding Kitten', playerCount - 1);
+  addCard('Defuse', 6 - playerCount);
 
   deck.sort(() => Math.random() - 0.5);
 

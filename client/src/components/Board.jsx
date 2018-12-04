@@ -11,9 +11,8 @@ export default class Board extends Component {
     this.state = {
       deck: [],
       discard: [''],
-      playerOne: [],
-      playerTwo: [],
-      currentPlayer: 'playerOne',
+      hands: [],
+      currentPlayer: 0,
       winner: undefined,
     };
     this.startGame = this.startGame.bind(this);
@@ -72,30 +71,25 @@ export default class Board extends Component {
 
   render() {
     const {
-      deck, discard, playerOne, playerTwo, currentPlayer, winner,
+      deck, discard, hands, currentPlayer, winner,
     } = this.state;
     return (
       <div>
         <button type="button" onClick={() => this.startGame()}>Start New Game</button>
-        <h4>{winner ? `${currentPlayer} wins!!` : `${currentPlayer}'s turn`}</h4>
+        <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
         <div>
           <span>Deck:</span>
           <Card type={`${deck.length} Cards Remaining`} />
           <button type="button" onClick={() => this.drawCard()}>Draw Card</button>
         </div>
         <div>
-          <span>Discard (Last 5 Cards):</span>
           <Hand cards={discard.slice(0, 5)} player="discard" playCard={this.playCard} />
         </div>
-        <div className={styles.playerOne}>
-          <span>PlayerOne:</span>
-          <Hand cards={playerOne} player="playerOne" playCard={this.playCard} />
+        <div className={styles.playerHands}>
+          {hands.map((hand, i) => (
+            <Hand cards={hand} player={i} playCard={this.playCard} key={Math.random()} />
+          ))}
         </div>
-        <div className={styles.playerTwo}>
-          <span>PlayerTwo:</span>
-          <Hand cards={playerTwo} player="playerTwo" playCard={this.playCard} />
-        </div>
-
       </div>
     );
   }

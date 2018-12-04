@@ -12,53 +12,63 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 
-let gameState = {
+let game = {
   deck: [],
   discard: [''],
-  playerOne: [],
-  playerTwo: [],
-  currentPlayer: 'playerOne',
+  hands: [],
+  currentPlayer: 0,
   winner: undefined,
 };
 
+const discard = (card) => {
+  if (game.discard[0] === '') {
+    game.discard = [card];
+  } else {
+    game.discard.unshift(card);
+  }
+};
+
 app.get('/game', (req, res) => {
-  res.status(200).send(gameState);
+  res.status(200).send(game);
 });
 
 app.get('/newGame', (req, res) => {
-  const { deck, hands } = createDeck(2);
-  gameState = {
+  const { deck, hands } = createDeck(3);
+  game = {
     deck,
     discard: [''],
-    playerOne: hands[0],
-    playerTwo: hands[1],
-    currentPlayer: 'playerOne',
+    hands,
+    currentPlayer: 0,
     winner: undefined,
   };
-  res.status(200).send(gameState);
+  res.status(200).send(game);
 });
 
 app.get('/drawCard', (req, res) => {
-  const next = gameState.deck.splice(0, 1);
-  if (gameState.currentPlayer === 'playerOne') {
-    gameState.playerOne.push(next);
-    gameState.currentPlayer = 'playerTwo';
-  } else {
-    gameState.playerTwo.push(next);
-    gameState.currentPlayer = 'playerOne';
-  }
+  const next = game.deck.splice(0, 1);
+  game.hands[game.currentPlayer].push(next);
+  game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
+
   if (next[0] === 'Exploding Kitten') {
     console.log('found winnner');
-    gameState.winner = gameState.currentPlayer;
+    game.winner = game.currentPlayer;
   }
 
-  res.status(200).send(gameState);
+  res.status(200).send(game);
 });
 
 app.post('/play', (req, res) => {
   console.log(req.body);
+  switch (game.hands[game.currentPlayer][req.body.index]) {
+    case 'Skip':
+      discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
+      game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
+      break;
+    default:
+      discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
+  }
 
-  res.status(200).send(gameState);
+  res.status(200).send(game);
 });
 
 app.listen(port, () => {
