@@ -1,0 +1,21 @@
+.Player {
+  border: 1px solid black;
+  width: 200px;
+  height: 100px;
+}
+
+.Name {
+  text-align: center;
+  font-size: 30px;
+}
+
+.Cards {
+  display: flex;
+  flex-direction: right;
+  justify-content: center;
+}
+
+.Back {
+  width: 20px;
+  height: 28px;
+}

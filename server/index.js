@@ -18,6 +18,9 @@ let game = {
   hands: [],
   currentPlayer: 0,
   winner: undefined,
+  playing: false,
+  history: [],
+  alive: [],
 };
 
 const discard = (card) => {
@@ -28,24 +31,32 @@ const discard = (card) => {
   }
 };
 
+const nextPlayer = () => {
+
+}
+
 app.get('/game', (req, res) => {
   res.status(200).send(game);
 });
 
 app.get('/newGame', (req, res) => {
-  const { deck, hands } = createDeck(3);
+  const { deck, hands } = createDeck(2);
   game = {
     deck,
     discard: [],
     hands,
     currentPlayer: 0,
     winner: undefined,
+    playing: true,
+    history: [],
+
   };
   res.status(200).send(game);
 });
 
 app.get('/drawCard', (req, res) => {
   const next = game.deck.splice(0, 1);
+  game.history.unshift(`Player ${game.currentPlayer} drew a card`);
   game.hands[game.currentPlayer].push(next);
   game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
 
@@ -60,15 +71,18 @@ app.get('/drawCard', (req, res) => {
 app.post('/play', (req, res) => {
   console.log(req.body);
   switch (game.hands[game.currentPlayer][req.body.index]) {
-    case 'Skip':
+    case 'skip':
+      game.history.unshift(`Player ${game.currentPlayer} played Skip`);
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
       game.currentPlayer = (game.currentPlayer + 1) % game.hands.length;
       break;
-    case 'Shuffle':
+    case 'shuffle':
+      game.history.unshift(`Player ${game.currentPlayer} played Shuffle`);
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
       game.deck.sort(() => Math.random() - 0.5);
       break;
     default:
+      game.history.unshift(`Player ${game.currentPlayer} played a card with no function`);
       discard(game.hands[game.currentPlayer].splice(req.body.index, 1));
   }
 

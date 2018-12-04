@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import styles from '../styles/Board.css';
 
+import Player from './Player.jsx';
 import Hand from './Hand.jsx';
 import Card from './Card.jsx';
 
@@ -15,6 +16,8 @@ export default class Board extends Component {
       currentPlayer: 0,
       winner: undefined,
       thisPlayer: 0,
+      running: false,
+      history: [],
     };
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
@@ -48,7 +51,8 @@ export default class Board extends Component {
       });
   }
 
-  drawCard() {
+  drawCard(e) {
+    e.preventDefault();
     if (this.state.winner === undefined) {
       axios.get('/drawCard')
         .then((response) => {
@@ -72,31 +76,44 @@ export default class Board extends Component {
 
   render() {
     const {
-      deck, discard, hands, currentPlayer, winner,
+      deck, discard, hands, currentPlayer, winner, thisPlayer, running, history,
     } = this.state;
     return (
       <div className={styles.Container}>
         <div className={styles.Header}>
           <button type="button" onClick={() => this.startGame()}>Start New Game</button>
+          <h4>{`You are player ${thisPlayer}`}</h4>
+          <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
         </div>
         <div className={styles.Opponents}>
-          <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
+          {hands.map((hand, i) => (
+            <Player cards={hand} player={i} key={Math.random()} />
+          ))}
         </div>
         <div className={styles.Stats}>
           <div>{`Cards Remaining: ${deck.length}`}</div>
           <div>{`Kittens Remaining: ${hands.length - 1}`}</div>
           <div>Chance of Death:</div>
           <div>{`${((hands.length - 1) / deck.length * 100).toFixed(2)}%`}</div>
-          <button type="button" onClick={() => this.drawCard()}>Draw Card</button>
         </div>
         <div className={styles.Deck}>
-            <Card type="back" />
+          <img
+            className={styles.Back}
+            src={'https://s3-us-west-1.amazonaws.com/explodingkitten/back.jpg'}
+            alt="Back"
+            onClick={(e) => this.drawCard(e)}
+          />
         </div>
         <div className={styles.Discard}>
           <Hand cards={discard.slice(0, 1)} player="discard" playCard={this.playCard} />
         </div>
         <div className={styles.History}>
-          History
+          History:
+          <ul>
+            {history.slice(0, 4).map(h => (
+              <li>{h}</li>
+            ))}
+          </ul>
         </div>
         <div className={styles.Hand}>
           {hands.map((hand, i) => {
