@@ -68,3 +68,11 @@
   grid-column: 1 / 10;
   grid-row: 4 / 5;
 }
+
+.Available {
+  border: 1px solid black;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+  font-size: 30px;
+}

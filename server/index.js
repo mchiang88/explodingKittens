@@ -42,7 +42,7 @@ app.get('/game', (req, res) => {
 });
 
 app.get('/newGame', (req, res) => {
-  const { deck, hands } = createDeck(3);
+  const { deck, hands } = createDeck(game.players.filter(x => x === 'Ready').length);
   const alive = Array(hands.length).fill(0).map((x, i) => i);
   game = {
     deck,
@@ -67,6 +67,7 @@ app.get('/endGame', (req, res) => {
     playing: false,
     history: [],
     alive: [],
+    players: ['available'],
   };
   res.status(200).send(game);
 });
@@ -107,6 +108,12 @@ app.post('/play', (req, res) => {
 
   res.status(200).send(game);
 });
+
+app.post('/addPlayer', (req, res) => {
+  console.log(req.body);
+  game.players = req.body.temp;
+  res.status(200).send(game);
+})
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
