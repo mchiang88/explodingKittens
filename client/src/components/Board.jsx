@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import styles from '../styles/Board.css';
+
+import Hand from './Hand.jsx';
 
 export default class Board extends Component {
   constructor() {
@@ -9,7 +12,7 @@ export default class Board extends Component {
       discard: [],
       playerOne: [],
       playerTwo: [],
-      current: 'playerOne',
+      currentPlayer: 'playerOne',
     };
     this.startGame = this.startGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
@@ -42,11 +45,12 @@ export default class Board extends Component {
 
   render() {
     const {
-      deck, discard, playerOne, playerTwo,
+      deck, discard, playerOne, playerTwo, currentPlayer,
     } = this.state;
     return (
       <div>
         <button type="button" onClick={() => this.startGame()}>Start New Game</button>
+        <h4>{`${currentPlayer}'s turn`}</h4>
         <div>
           <span>Deck:</span>
           <span>{deck}</span>
@@ -55,13 +59,13 @@ export default class Board extends Component {
           <span>Discard:</span>
           <span>{discard}</span>
         </div>
-        <div>
+        <div className={styles.playerOne}>
           <span>PlayerOne:</span>
-          <span>{playerOne}</span>
+          <Hand cards={playerOne} />
         </div>
-        <div>
+        <div className={styles.playerTwo}>
           <span>PlayerTwo:</span>
-          <span>{playerTwo}</span>
+          <Hand cards={playerTwo} />
         </div>
 
       </div>
