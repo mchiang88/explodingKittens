@@ -42,7 +42,7 @@ app.get('/game', (req, res) => {
 });
 
 app.get('/newGame', (req, res) => {
-  const { deck, hands } = createDeck(4);
+  const { deck, hands } = createDeck(3);
   const alive = Array(hands.length).fill(0).map((x, i) => i);
   game = {
     deck,

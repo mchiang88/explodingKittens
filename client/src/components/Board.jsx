@@ -83,19 +83,19 @@ export default class Board extends Component {
       <div className={styles.Container}>
         <div className={styles.Header}>
           <button type="button" onClick={() => this.startGame()}>Start New Game</button>
+          <button type="button">End Game</button>
           <h4>{`You are player ${thisPlayer}`}</h4>
           <h4>{(winner !== undefined) ? `Player ${currentPlayer} wins!!` : `Player ${currentPlayer}'s turn`}</h4>
         </div>
         <div className={styles.Opponents}>
           {hands.map((hand, i) => (
-            <Player cards={hand} player={i} key={Math.random()} />
+            <Player cards={hand} player={i} alive={alive} key={Math.random()} />
           ))}
         </div>
         <div className={styles.Stats}>
           <div>{`Cards Remaining: ${deck.length}`}</div>
           <div>{`Kittens Remaining: ${alive.length - 1}`}</div>
-          <div>Chance of Death:</div>
-          <div>{`${((hands.length - 1) / deck.length * 100).toFixed(2)}%`}</div>
+          <div>{`Chance of Explosion: ${((alive.length - 1) / deck.length * 100).toFixed(2)}%`}</div>
         </div>
         <div className={styles.Deck}>
           <img
